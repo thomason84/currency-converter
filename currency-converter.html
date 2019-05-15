@@ -1,0 +1,244 @@
+<style media="screen">
+  .hide{
+    display: none !important;
+  }
+  #app{
+    border: 1px solid black;
+  }
+  h1{
+    margin: 10px;
+  }
+  .amountToConvertSection{
+    border-bottom: 1px solid black;
+    padding: 10px;
+  }
+  .numberToConvertContainer{
+    display: flex;
+    -webkit-display: flex;
+    justify-content: space-between;
+    -webkit-justify-content: space-between;
+    padding-bottom: 20px;
+    width: 100%;
+  }
+  .convertFromCurrencyTitle{
+    font-style: italic;
+    width: 100%;
+  }
+  .convertFromCurrency,
+  .numberToConvert{
+    display: inline-block;
+    padding: 0px;
+    margin: 0px;
+    font-weight: bold;
+  }
+  .currencyContainer{
+    margin:
+  }
+  .currencyCard{
+    display: flex;
+    -webkit-display: flex;
+    justify-content: space-between;
+    -webkit-justify-content: space-between;
+    flex-wrap: wrap;
+    -webkit-flex-wrap: wrap;
+    padding-bottom: 20px;
+    width: 95% - 1px;
+    border: 1px solid black;
+    margin: 10px;
+    padding: 0px 5px;
+  }
+  .currencyListContainer,
+  .removeButton{
+    display: inline-block;
+  }
+  .removeButton{
+    display: flex;
+    -webkit-display: flex;
+    align-items: center;
+    justify-content: center;
+    -webkit-justify-content: center;
+    cursor: pointer;
+    width: calc(10% - 1px);
+  }
+  .currencyListContainer{
+    width: 90%;
+    border-right: 1px solid black;
+  }
+  .currencyCard > button{
+    width: 20%;
+  }
+  .currencyName,
+  .conversionRate{
+    display: inline-block;
+    margin: 0px;
+  }
+  .conversionRate{
+    float: right;
+  }
+  .exchangeToCurrencyName,
+  .exchangeRate{
+    width: 100%;
+    margin: 0px;
+  }
+  .currencyName,
+  .conversionRate,
+  .exchangeToCurrencyName,
+  .exchangeRate{
+    padding: 5px;
+  }
+  .shortListItem{
+    padding: 10px;
+    margin: 0px;
+  }
+  .shortListItem:hover{
+    cursor: pointer;
+    background-color: #ddd;
+  }
+  .addMoreCurrencies{
+    margin: 10px 10px 40px;
+    padding: 10px;
+    border: 1px solid black;
+  }
+  .addMoreCurrencies:hover{
+    cursor: pointer;
+  }
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.js"></script>
+<div id="app">
+  <h1>{{title}}</h1>
+
+  <section class="amountToConvertSection" >
+    <p class="convertFromCurrencyTitle">{{ convertFromCurrency }}</p>
+    <div class="numberToConvertContainer">
+      <p class="convertFromCurrency">USD</p>
+      <input type="text" name="numberToConvert" value="1" v-model="amount" />
+    </div>
+  </section>
+
+  <section class="currencies">
+    <div class="currencyContainer">
+      <div
+        class="currency"
+        v-for="(a, index) in currencyFrom"
+        v-bind:class='["hide", "currencyCard"]'
+      >
+        <div class="currencyListContainer">
+          <p class="currencyName">{{ a.currency }}</p>
+          <p class="conversionRate">{{a.conversionRate}}</p>
+          <p class="exchangeToCurrencyName">{{a.currency}} - {{a.desc}}</p>
+          <p class="exchangeRate">
+            {{amount}} USD = {{a.currency}} {{parseInt(amount * a.conversionRate).toFixed(2)}}
+
+          </p>
+        </div>
+        <div class='removeButton' v-on:click='removeCurrency($event)'>(-)</div>
+      </div>
+    </div>
+
+    <p v-for="(a, index) in currencyFrom" v-bind:class='["hide", "shortListItem"]' v-on:click='addCurrency($event)'>{{ a.currency }}</p>
+    <div class='addMoreCurrencies' v-on:click='showCurrencies'>(+) Add More Currencies</div>
+  </section>
+</div>
+
+<script type="text/javascript">
+  new Vue({
+    el: "#app",
+    data: {
+      title: "Conversion Rate App",
+      convertFromCurrency: "USD - United States Dollars",
+      currency: "",
+      amount: 1,
+      hide: 'hide',
+      currencyFrom: [
+        {
+          currency: "USD",
+          desc: "US Dollar",
+          conversionRate: 1
+        },
+        {
+          currency: "CAD",
+          desc: "Canadian Dollar",
+          conversionRate: 1.35
+        },
+        {
+          currency: "IDR",
+          desc: "Indonesian Rupiah",
+          conversionRate: 14661.5
+        },
+        {
+          currency: "GBP",
+          desc: "British Pound",
+          conversionRate: 0.77
+        },
+        {
+          currency: "CHF",
+          desc: "Swiss franc",
+          conversionRate: 1.01
+        },
+        {
+          currency: "SGD",
+          desc: "Singapore Dollar",
+          conversionRate: 1.37
+        },
+        {
+          currency: "INR",
+          desc: "Indian Rupee",
+          conversionRate: 70.6
+        },
+        {
+          currency: "MYR",
+          desc: "Malaysian Ringgit",
+          conversionRate: 4.17
+        },
+        {
+          currency: "JPY",
+          desc: "Japanese Yen",
+          conversionRate: 109.24
+        },
+        {
+          currency: "KRW",
+          desc: "South Korean won",
+          conversionRate: 1188.5
+        }
+      ]
+    },
+    methods: {
+      showCurrencies(event) {
+        shortListItems = document.querySelectorAll('.shortListItem');
+        currencyCards = document.querySelectorAll('.currencyCard');
+        num = 0;
+        shortListItems.forEach(function(i){
+            if (currencyCards[num].classList.contains('hide') === true){
+              shortListItems[num].classList.remove('hide');
+              num++;
+            } else {
+              shortListItems[num].classList.add('hide');
+              num++;
+            }
+        });
+      },
+      addCurrency(event){
+        shortListItems = document.querySelectorAll('.shortListItem');
+        currencyCards = document.querySelectorAll('.currencyCard');
+        currencyNames = document.querySelectorAll('.currencyName');
+        target = event.target.innerText;
+        num = 0;
+        index = 0;
+        currencyNames.forEach(function(i){
+            if (currencyCards[num].classList.contains('hide') === true && target == currencyNames[num].innerText){
+              currencyCards[num].classList.remove('hide');
+              shortListItems[num].classList.add('hide');
+              num++;
+            } else {
+              shortListItems[num].classList.add('hide');
+              num++;
+            };
+        });
+      },
+      removeCurrency(event) {
+        event.target.parentNode.classList.add('hide');
+      }
+    }
+  });
+</script>
